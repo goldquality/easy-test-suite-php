@@ -1,20 +1,18 @@
 # Easy Test Suite
 
-___
+**Snapshot testing** allows developers to ensure their application's output remains consistent across updates and refactoring, enhancing test coverage and reliability with **minimal effort**.
+
+Provides the `assertSnapshot()` method:
+- Automatically create a JSON file with the response content during the first test run.
+- Compare the response against the saved snapshot in subsequent test runs.
+
 ## Benefits
 
 - **Speed:** Quickly create tests without manually managing output assertions.
 - **Flexibility:** Combine with another asserts, like `assertDatabaseHas`, `assertQueue`, `assertCookie` and others.
 - **Consistency:** Automatically verifies outputs against previously captured snapshots, reducing human error.
 - **Framework Agnostic:** Compatible with popular frameworks like Symfony, Laravel, Yii. Making it versatile for any project setup.
-
-Snapshot testing allows developers to ensure their application's output remains consistent across updates and refactoring, enhancing test coverage and reliability with minimal effort.
-
 ___
-
-The `SnapshotAssertTrait` provides the `assertSnapshot()` method:
-- Automatically create a JSON file with the response content during the first test run.
-- Compare the response against the saved snapshot in subsequent test runs.
 
 
 ## Installation
@@ -68,7 +66,7 @@ class ExampleTest extends KernelTestCase
 {
     use SnapshotAssertTrait;
 
-    public function testResponseOk(): void
+    public function test_response_ok(): void
     {
         // Simulate a logged-in user
         $client = static::createClient();
