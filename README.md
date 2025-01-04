@@ -40,11 +40,13 @@ Example of a generated snapshot file `test_response_ok_0.json`:
     {
       "id": 1,
       "name": "Joe Doe",
+      "balance": 100.00,
       "createdAt": "1970-12-30 12:07:24"
     },
     {
       "id": "@integer@", #use of masks for dynamic values
       "name": "Joe Doe",
+      "balance": "@double@.greaterThan(10).lowerThan(50.12)",
       "createdAt": "@datetime@"
     }
   ]
