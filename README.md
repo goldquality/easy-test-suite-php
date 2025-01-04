@@ -32,7 +32,7 @@ composer require --dev goldquality/easy-test-suite-php
 
 Example of a generated snapshot file `test_response_ok_0.json`:
 ```JSON
-⚠DELETE THIS ROW ⚠️
+⚠️DELETE THIS ROW ⚠️
 {
   "data": [
     {
@@ -41,7 +41,7 @@ Example of a generated snapshot file `test_response_ok_0.json`:
       "createdAt": "1970-12-30 12:07:24"
     },
     {
-      "id": "@integer@", // use of masks for dynamic values
+      "id": "@integer@", #use of masks for dynamic values
       "name": "Joe Doe",
       "createdAt": "@datetime@"
     }
@@ -49,7 +49,7 @@ Example of a generated snapshot file `test_response_ok_0.json`:
 }
 ```
 4. **Edit Snapshot**: Open the created file and remove the protective line "DELETE THIS ROW" at the top.
-5. **Add Masks (Optional)**: Incorporate [masks](#available-masks) to manage auto-generated values more effectively. 
+5. **Masks (Optional)**: Add [masks](#available-masks) to manage auto-generated values. 
 6. **Re-run Tests**: Verify that the response contents match your established snapshots.
 7. **Verify and Done**: Your setup should now validate changes against snapshots.
 
