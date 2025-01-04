@@ -1,10 +1,8 @@
 # Easy Test Suite
 
-**Snapshot testing** allows developers to ensure their application's output remains consistent across updates and refactoring, enhancing test coverage and reliability with **minimal effort**.
+**Snapshot testing** is a testing technique that captures the output of a function/component/endpoint and saves it as a reference.  
 
-Provides the `assertSnapshot()` method:
-- Automatically create a JSON file with the response content during the first test run.
-- Compare the response against the saved snapshot in subsequent test runs.
+On subsequent test runs, the output is compared against the saved reference to ensure consistency and catch unexpected changes.
 
 ## Benefits
 
@@ -14,6 +12,12 @@ Provides the `assertSnapshot()` method:
 - **Framework Agnostic:** Compatible with popular frameworks like Symfony, Laravel, Yii. Making it versatile for any project setup.
 ___
 
+## Comparison with competitors
+
+easy-test-suite vs [spatie/phpunit-snapshot-assertions](https://github.com/spatie/phpunit-snapshot-assertions):
+- easy-test-suite provides a robust array of masks for dynamic values, which allows for a wide set of patterns.
+- easy-test-suite places a protection line ("DELETE THIS ROW") in newly created snapshots to prompt user review and manual editing, which encourages careful validation of the snapshot’s correctness.
+___
 
 ## Installation
 
@@ -116,23 +120,90 @@ class ExampleTest extends TestCase
 ```
 
 ## Available masks
-- @string@
-- @integer@
-- @number@
-- @double@
-- @boolean@
-- @time@
-- @date@
-- @datetime@
-- @timezone@ || @tz
-- @array@
-- @array_previous@ - match next array element using pattern from previous element
-- @array_previous_repeat@ - match all remaining array elements using pattern from previous element
-- @...@ - unbounded array, once used matcher will skip any further array elements
-- @null@
-- @*@ || @wildcard@
-- @uuid@
-- @ulid@
-- @json@
-- @string@||@integer@ - string OR integer
+- `@string@`
+- `@integer@`
+- `@number@`
+- `@double@`
+- `@boolean@`
+- `@time@`
+- `@date@`
+- `@datetime@`
+- `@timezone@` || `@tz`
+- `@array@`
+- `@array_previous@` - match next array element using pattern from previous element
+- `@array_previous_repeat@` - match all remaining array elements using pattern from previous element
+- `@...@` - unbounded array, once used matcher will skip any further array elements
+- `@null@`
+- `@*@` || `@wildcard@`
+- `@uuid@`
+- `@ulid@`
+- `@json@`
+- `@string@||@integer@` - string OR integer
 - For more patterns, see [php-matcher available patterns](https://github.com/coduo/php-matcher#available-patterns).
+
+___
+
+## Advanced configuration
+
+For developers who need more control over the configuration.
+
+You can override the following methods in your test classes to customize how snapshots are handled:
+
+1. Absolute path to your tests dir.
+   ```php
+   protected function getAbsoluteTestsPath(): string 
+   {
+       return '/Users/user/project/tests';
+   }
+   ```
+   If you are using Docker, set path inside a container. e.g. WORKDIR is /app
+   ```php
+   protected function getAbsoluteTestsPath(): string 
+   {
+       return '/app/tests';
+   }
+   ```
+
+2. If you are using custom tests namespace
+   ```php
+   protected function getTestsRootNamespace(): string 
+   {
+       return 'CustomNamespace/Tests/';
+   }
+   ```
+
+3. If you need more control.
+   
+    You can extend `SnapshotHandler` and implement as you need.
+   ```php
+   protected function initSnapshotHandler(): SnapshotHandler 
+   {
+       // Custom initialization logic
+   }
+   ```
+___
+
+## FAQ
+
+### How do snapshot files work?
+
+The first time a test using `assertSnapshot()` is run, a snapshot file (in JSON format) is created, capturing the component's or function's output. In subsequent runs, the output is compared against this file. If the outputs differ, the test will fail, alerting you to unintended changes.
+
+### My test fails due to a mismatch with the snapshot; what now?
+
+If a test fails because the output does not match the snapshot, you should:
+1. Review the differences to determine if they are expected changes.
+2. If the changes are intended, manually edit the snapshot file or delete snapshot file and re-run the test to generate a new snapshot.
+3. If the changes are unintended, investigate and fix the underlying issue in your application.
+
+### What are masks, and how do I use them?
+
+Masks are patterns used in snapshot files to handle dynamic values (e.g., timestamps, IDs) that might change between test runs. For example, `@integer@` can be used for dynamic integer values. After the first test run, you can edit the snapshot to include these masks.
+
+### Why do I need to delete the "DELETE THIS ROW" line in the snapshot?
+
+The "DELETE THIS ROW" line serves as a protective line to remind developers to review and edit the snapshot file after its initial creation. You should remove this line to finalize the snapshot structure.
+
+### Can I customize the naming of snapshot files?
+
+Currently, the naming of snapshot files automatically based on your test case names.

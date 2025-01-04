@@ -4,34 +4,41 @@ declare(strict_types=1);
 
 namespace GoldQuality\EasyTestSuite;
 
-use Coduo\PHPMatcher\Backtrace;
 use Coduo\PHPMatcher\PHPUnit\PHPMatcherAssertions;
-use Illuminate\Testing\TestResponse;
 use JsonException;
 
 trait SnapshotAssertTrait
 {
     use PHPMatcherAssertions;
 
-    protected ?Backtrace $backtrace = null;
-    protected bool $isDirStyleSnapshotsSaving = true;
+    protected bool $isDirStyle = true;
 
-    protected string $absoluteTestsNamespacePath = 'Tests/';
-    protected string $absoluteTestsPath = '/app/tests';
-
-    protected function setBacktrace(Backtrace $backtrace) : void
+    protected function getAbsoluteTestsPath(): string
     {
-        $this->backtrace = $backtrace;
+        return '/app/tests';
+    }
+
+    protected function getTestsRootNamespace(): string
+    {
+        if (class_exists(\Illuminate\Foundation\Application::class)) {
+            return 'Tests/';
+        }
+
+        if (class_exists(\Symfony\Component\HttpKernel\Kernel::class)) {
+            return 'App/Tests/';
+        }
+
+        throw new \RuntimeException('Cannot identify framework, please override this method. Check autoload section in composer.json');
     }
 
     protected function initSnapshotHandler(): SnapshotHandler
     {
         return new SnapshotHandler(
-            $this->absoluteTestsNamespacePath,
-            $this->absoluteTestsPath,
+            $this->getTestsRootNamespace(),
+            $this->getAbsoluteTestsPath(),
             static::class,
             $this->getTestName(),
-            $this->isDirStyleSnapshotsSaving
+            $this->isDirStyle
         );
     }
 
@@ -41,11 +48,6 @@ trait SnapshotAssertTrait
     protected function encodeSnapshotData(array $data): string
     {
         return json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    }
-
-    public function assertResponseSnapshot(TestResponse $response): void
-    {
-        $this->assertSnapshot($response->collect()->toArray());
     }
 
     public function assertSnapshot(array $data): void
@@ -60,8 +62,6 @@ trait SnapshotAssertTrait
 
         $this->assertMatchesPattern($expectedContent, $actualContent, "Snapshot is not equal. File {$filepath}");
     }
-
-    abstract public static function markTestSkipped(string $message = ''): never;
 
     protected function getTestName(): string
     {
