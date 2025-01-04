@@ -1,4 +1,4 @@
-# Easy Test Suite
+# PHPUnit Snapshots
 
 **Snapshot testing** is a testing technique that captures the output of a function/component/endpoint and saves it as a reference.  
 
@@ -14,22 +14,46 @@ ___
 
 ## Comparison with competitors
 
-easy-test-suite vs [spatie/phpunit-snapshot-assertions](https://github.com/spatie/phpunit-snapshot-assertions):
-- easy-test-suite provides a robust array of masks for dynamic values, which allows for a wide set of patterns.
-- easy-test-suite places a protection line ("DELETE THIS ROW") in newly created snapshots to prompt user review and manual editing, which encourages careful validation of the snapshot’s correctness.
+phpunit-snapshots vs [spatie/phpunit-snapshot-assertions](https://github.com/spatie/phpunit-snapshot-assertions):
+- phpunit-snapshots provides a robust array of masks for dynamic values, which allows for a wide set of patterns.
+- phpunit-snapshots places a protection line ("DELETE THIS ROW") in newly created snapshots to prompt user review and manual editing, which encourages careful validation of the snapshot’s correctness.
 ___
 
 ## Installation
 
 ```bash
-composer require --dev goldquality/easy-test-suite-php
+composer require --dev goldquality/phpunit-snapshots
 ```
 
+## Configuration
+1. Create or add to existing BaseTestCase e.g. `ApiTestCase`
+```php
+<?php
 
+namespace Tests; // laravel
+//namespace App\Tests; // symfony
+
+use GoldQuality\PHPUnitSnapshots\SnapshotAssertTrait;
+use Illuminate\Testing\TestResponse;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+
+
+abstract class ApiTestCase extends TestCase # laravel
+//abstract class ApiTestCase extends KernelTestCase # symfony
+{
+    use SnapshotAssertTrait;
+
+    // Additional helper method
+    public function assertResponseSnapshot($response): void
+    {
+        $this->assertSnapshot($response->collect()->toArray()); # laravel
+        //$this->assertSnapshot($response->toArray()); # symfony
+    }
+}
+```
 ## Usage
-
-1. **Integrate trait**: Add the `\GoldQuality\EasyTestSuite\SnapshotAssertTrait` to your test class.
-2. **Invoke assert method**: Use the `assertSnapshot()` method in your test cases with the response content as an argument.
+1. **Extend TestCase**: Extend the `ApiTestCase` .
+2. **Invoke assert method**: Use the `assertSnapshot()` or `assertResponseSnapshot()` method in your test cases with the response content as an argument.
 3. **Run your tests**. On the initial test run, a snapshot file is created with the JSON response content.  
 
 Example of a generated snapshot file `test_response_ok_0.json`:
@@ -44,9 +68,9 @@ Example of a generated snapshot file `test_response_ok_0.json`:
       "createdAt": "1970-12-30 12:07:24"
     },
     {
-      "id": "@integer@", #use of masks for dynamic values
+      "id": "@integer@", # use of masks for dynamic values
       "name": "Joe Doe",
-      "balance": "@double@.greaterThan(10).lowerThan(50.12)",
+      "balance": "@double@.greaterThan(10).lowerThan(50.12)", # mask conditions
       "createdAt": "@datetime@"
     }
   ]
@@ -55,7 +79,6 @@ Example of a generated snapshot file `test_response_ok_0.json`:
 4. **Edit Snapshot**: Open the created file and remove the protective line "DELETE THIS ROW" at the top.
 5. **Masks (Optional)**: Add [masks](#available-masks) to manage auto-generated values. 
 6. **Re-run Tests**: Verify that the response contents match your established snapshots.
-7. **Verify and Done**: Your setup should now validate changes against snapshots.
 
 This method allows developers to ensure their application's output remains consistent across updates and refactoring, enhancing test coverage and reliability with minimal effort.
 ___
@@ -65,13 +88,10 @@ ___
 ```php
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use GoldQuality\EasyTestSuite\SnapshotAssertTrait;
+use App\Tests\ApiTestCase;
 
-class ExampleTest extends KernelTestCase
+class ExampleTest extends ApiTestCase
 {
-    use SnapshotAssertTrait;
-
     public function test_response_ok(): void
     {
         // Simulate a logged-in user
@@ -85,6 +105,7 @@ class ExampleTest extends KernelTestCase
 
         // Assert the response snapshot
         $this->assertSnapshot($response->toArray()); // Asserts that response content matches the test_response_ok_0.json
+        // or $this->assertResponseSnapshot($response);
         
         // Additional assertions
         $this->assertEquals(200, $response->getStatusCode());
@@ -96,13 +117,10 @@ class ExampleTest extends KernelTestCase
 ```php
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use GoldQuality\EasyTestSuite\SnapshotAssertTrait;
+use Tests\ApiTestCase;
 
-class ExampleTest extends TestCase
+class ExampleTest extends ApiTestCase
 {
-    use SnapshotAssertTrait;
-
     public function test_response_ok(): void
     {
         // Simulate a logged-in user
@@ -114,6 +132,7 @@ class ExampleTest extends TestCase
 
         // Assert the response snapshot
         $this->assertSnapshot($response->collect()->toArray());   // Asserts that response content matches the test_response_ok_0.json
+        // or $this->assertResponseSnapshot($response);
         
         // Additional assertions
         $response->assertStatus(200);
@@ -147,42 +166,13 @@ ___
 
 ## Advanced configuration
 
-For developers who need more control over the configuration.
-
-You can override the following methods in your test classes to customize how snapshots are handled:
-
-1. Absolute path to your tests dir.
-   ```php
-   protected function getAbsoluteTestsPath(): string 
-   {
-       return '/Users/user/project/tests';
-   }
-   ```
-   If you are using Docker, set path inside a container. e.g. WORKDIR is /app
-   ```php
-   protected function getAbsoluteTestsPath(): string 
-   {
-       return '/app/tests';
-   }
-   ```
-
-2. If you are using custom tests namespace
-   ```php
-   protected function getTestsRootNamespace(): string 
-   {
-       return 'CustomNamespace/Tests/';
-   }
-   ```
-
-3. If you need more control.
-   
-    You can extend `SnapshotHandler` and implement as you need.
-   ```php
-   protected function initSnapshotHandler(): SnapshotHandler 
-   {
-       // Custom initialization logic
-   }
-   ```
+If you need more control you can extend `SnapshotHandler` and implement as you need.
+```php
+protected function initSnapshotHandler(): SnapshotHandler 
+{
+   // Custom initialization logic
+}
+```
 ___
 
 ## FAQ

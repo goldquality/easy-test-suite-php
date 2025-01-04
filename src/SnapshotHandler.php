@@ -1,8 +1,10 @@
 <?php
 
-namespace GoldQuality\EasyTestSuite;
+namespace GoldQuality\PHPUnitSnapshots;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use ReflectionObject;
 use RuntimeException;
 
 class SnapshotHandler
@@ -10,30 +12,28 @@ class SnapshotHandler
     private string $filePath;
 
     public function __construct(
-        private string $namespaceRoot,
-        private string $pathRoot,
         private string $classWithNamespace,
-        private string $testFileName,
-        private bool $isDirStyle = true
+        private string $testName,
+        private bool   $isDirStyle = true
     )
     {
         $this->filePath = $this->generateFilePath();
     }
 
+
     protected function generateFilePath(): string
     {
-        $testFilePath = str_replace(['\\', $this->namespaceRoot], ['/', ''], $this->classWithNamespace);
-        $testDirPath = dirname($testFilePath);
-        $testDirName = basename($testFilePath);
+        $object = new ReflectionClass($this->classWithNamespace);
 
-        $pattern = $this->isDirStyle ? "%s/%s/%s_snapshots/%s.json" : "%s/%s/%s_%s.json";
+        $filename = $object->getFileName();
+        $filenameWithoutExt = str_replace('.php', '', $filename);
+
+        $pattern = $this->isDirStyle ? "%s_snapshots/%s.json" : "%s/%s/%s_%s.json";
 
         return sprintf(
             $pattern,
-            $this->pathRoot,
-            $testDirPath,
-            $testDirName,
-            $this->testFileName
+            $filenameWithoutExt,
+            $this->testName
         );
     }
 

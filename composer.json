@@ -1,11 +1,11 @@
 {
-    "name": "goldquality/easy-test-suite-php",
+    "name": "goldquality/phpunit-snapshots",
     "type": "library",
     "version": "1.0.0",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "GoldQuality\\EasyTestSuite\\": "src/"
+            "GoldQuality\\PHPUnitSnapshots\\": "src/"
         }
     },
     "require": {
