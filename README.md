@@ -175,10 +175,11 @@ protected function initSnapshotHandler(): SnapshotHandler
    // Custom initialization logic
 }
 ```
-___
 
 ## Testing
-```composer test```
+```bash
+composer test
+```
 
 ___
 ## FAQ
