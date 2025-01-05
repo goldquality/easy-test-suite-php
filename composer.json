@@ -1,7 +1,13 @@
 {
     "name": "goldquality/phpunit-snapshots",
-    "type": "library",
-    "version": "1.0.0",
+    "description": "Snapshot testing with PHPUnit",
+    "keywords": [
+        "phpunit-snapshots",
+        "phpunit",
+        "snapshot",
+        "assert",
+        "testing"
+    ],
     "license": "MIT",
     "scripts": {
         "test": "phpunit"
