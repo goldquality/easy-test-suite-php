@@ -51,6 +51,8 @@ abstract class ApiTestCase extends TestCase # laravel
     }
 }
 ```
+[see example implementation](/tests)
+
 ## Usage
 1. **Extend TestCase**: Extend the `ApiTestCase` .
 2. **Invoke assert method**: Use the `assertSnapshot()` or `assertResponseSnapshot()` method in your test cases with the response content as an argument.
@@ -69,7 +71,7 @@ Example of a generated snapshot file `test_response_ok_0.json`:
     },
     {
       "id": "@integer@", # use of masks for dynamic values
-      "name": "Joe Doe",
+      "name": "Martin Fowler",
       "balance": "@double@.greaterThan(10).lowerThan(50.12)", # mask conditions
       "createdAt": "@datetime@"
     }

@@ -1,0 +1,25 @@
+{
+    "data": [
+        {
+            "id": "@integer@",
+            "uuid": "7d675197-22ec-4338-8647-17b946e95427",
+            "name": "Robert Martin",
+            "balance": 200.01,
+            "createdAt": "1980-01-01 00:00:00"
+        },
+        {
+            "id": "@integer@",
+            "uuid": "@uuid@",
+            "name": "Joe Doe",
+            "balance": "@double@.lowerThan(11)",
+            "createdAt": "@datetime@"
+        },
+        {
+            "id": "@integer@",
+            "uuid": "@uuid@",
+            "name": "Martin Fowler",
+            "balance": "@double@.greaterThan(500).lowerThan(601)",
+            "createdAt": "@datetime@"
+        }
+    ]
+}

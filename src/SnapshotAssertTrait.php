@@ -45,6 +45,12 @@ trait SnapshotAssertTrait
 
     protected function getTestName(): string
     {
-        return $this->name() . '_' . $this->dataName();
+        $dataProviderName = $this->dataName();
+
+        if (!$dataProviderName) {
+            $dataProviderName = '1';
+        }
+
+        return $this->name() . '_' . $dataProviderName;
     }
 }

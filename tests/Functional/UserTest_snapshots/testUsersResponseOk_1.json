@@ -1,0 +1,18 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "uuid": "5d675197-22ec-4338-8647-17b946e9542c",
+            "name": "Joe Doe",
+            "balance": 100,
+            "createdAt": "1970-12-30 12:00:00"
+        },
+        {
+            "id": 42,
+            "uuid": "6d675197-22ec-4338-8647-17b946e9542a",
+            "name": "Martin Fowler",
+            "balance": 100,
+            "createdAt": "1980-01-01 00:00:00"
+        }
+    ]
+}
