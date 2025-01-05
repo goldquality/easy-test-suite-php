@@ -55,7 +55,7 @@ class SnapshotHandler
             throw new RuntimeException("Cannot save snapshot file {$this->filePath}");
         }
 
-        TestCase::markTestSkipped("⚠️Snapshot created {$this->filePath}");
+        TestCase::markTestIncomplete("⚠️Snapshot created {$this->filePath}");
     }
 
     public function getSnapshotContent(): string

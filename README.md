@@ -177,6 +177,10 @@ protected function initSnapshotHandler(): SnapshotHandler
 ```
 ___
 
+## Testing
+```composer test```
+
+___
 ## FAQ
 
 ### How do snapshot files work?
