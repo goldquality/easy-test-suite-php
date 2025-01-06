@@ -48,7 +48,7 @@ trait SnapshotAssertTrait
         $dataProviderName = $this->dataName();
 
         if (!$dataProviderName) {
-            $dataProviderName = '1';
+            $dataProviderName = '0';
         }
 
         return $this->name() . '_' . $dataProviderName;
