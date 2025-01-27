@@ -31,7 +31,6 @@ public function test_fluent_json(): void
 }
 
 ```
-To alleviate this pain, a more concise and efficient approach involves snapshot testing. With a snapshot testing library, you can focus on the actual content of the response rather than writing detailed assertions. 
 
 Here's how you can simplify the same test:
 ```php
