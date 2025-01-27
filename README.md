@@ -57,6 +57,7 @@ Instead of manually asserting each field and its structure, this approach stores
 - **Speed:** Quickly create tests without manually managing output assertions.
 - **Flexibility:** Combine with another asserts, like `assertDatabaseHas`, `assertQueue`, `assertCookie` and others.
 - **Consistency:** Automatically verifies outputs against previously captured snapshots, reducing human error.
+- **Focus on Differences**: When a test fails, you see the exact difference between the current response and the expected snapshot, making debugging faster.
 - **Framework Agnostic:** Compatible with popular frameworks like Symfony, Laravel, Yii. Making it versatile for any project setup.
 
 ___
